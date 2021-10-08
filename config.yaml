@@ -11,8 +11,8 @@ params:
       A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP
       AND RELEASED UNDER THE CREATIVE COMMONS.
     title: Hi, my name is Atakan
-  #blog: {}
-  #contact:
+    blog: {}
+    contact:
     address:
       - city: City, ST 00000
         country: Country
@@ -41,9 +41,9 @@ params:
       - alt: HTML5 UP
         text: 'Design: '
         url: https://www.html5up.net
-    social:
-  #    - icon: fa-twitter
-  #      label: Twitter
+        social:
+      - icon: fa-twitter
+        label: Twitter
         url: https://www.twitter.com
       - icon: fa-facebook
         label: Facebook
