@@ -85,7 +85,7 @@ params:
       - image: pic01.jpg
         subtitle: Ipsum Dolor Sit Amet
         title: Yield Curve
-        url: blogs/yield_curve
+        url: blogs/risk_return
       - image: pic02.jpg
         subtitle: Feugiat Amet Tempus
         title: Tempus
