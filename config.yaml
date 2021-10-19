@@ -42,6 +42,9 @@ params:
         text: 'Design: '
         url: https://www.html5up.net
         social:
+#      - icon: fa-twitter
+#        label: Twitter
+#        url: https://www.twitter.com
       - icon: fa-facebook
         label: Facebook
         url: https://www.facebook.com/atakan.erdogdu
