@@ -9,7 +9,7 @@ params:
     buttonText: Start Exploring
     subtitle: |-
       GET TO KNOW ME AND THE PROJECTS I WORKED ON
-    title: Hi, my name is Atakan
+    title: Hi, my name is Atakan!
     blog: {}
     contact:
     address:
@@ -41,7 +41,7 @@ params:
       - alt: HTML5 UP
         text: 'Design: '
         url: https://www.html5up.net
-        social:
+    social:
 #      - icon: fa-twitter
 #        label: Twitter
 #        url: https://www.twitter.com
@@ -58,7 +58,7 @@ params:
         label: LinkedIn
         url: https://www.linkedin.com/in/atakan-erdogdu/
   image: ''
-  name: Your name
+  name: Atakan Erdogdu
   navigation:
     button1:
       - name: Get Started
@@ -72,14 +72,14 @@ params:
   tiles:
     enable: yes
     showcase:
-      - image: stocks.jpg
-        subtitle: Yield Curve Inversion and 3m-10y Spread As Predictors of Recessions
-        title: Yield Curve
+      - image: portrait.jpeg
+        subtitle: A brief introduction
+        title: About me
+        url: blogs/about_me
+      - image: stocks.jpg.
+        subtitle: Yield Curve Inversion as a Predictor of Recessions
+        title: Yield Curve 
         url: blogs/yield_curve
-      - image: pic02.jpg
-        subtitle: Feugiat Amet Tempus
-        title: Tempus
-        url: blogs/tempus
       - image: pic03.jpg
         subtitle: Lorem Etiam Nullam
         title: Magna
