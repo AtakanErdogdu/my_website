@@ -8,25 +8,10 @@ draft: false
 image: portrait.jpeg # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
 
 keywords: ""
-slug: yield_curve # slug is the shorthand URL address... no spaces plz
-title: Yield Curve Inversion and 3m-10y Spread As a Predictor of Recessions
+slug: about_me # slug is the shorthand URL address... no spaces plz
+title: About me
 ---
 
-```{r, setup, echo=FALSE}
-knitr::opts_chunk$set(
-  message = FALSE, 
-  warning = FALSE, 
-  tidy=FALSE,     # display code as typed
-  size="small")   # slightly smaller font for code
-options(digits = 3)
-
-# default figure size
-knitr::opts_chunk$set(
-  fig.width=6.75, 
-  fig.height=6.75,
-  fig.align = "center"
-)
-```
 
 ##Introduction
 

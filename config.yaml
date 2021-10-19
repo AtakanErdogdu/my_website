@@ -76,7 +76,7 @@ params:
         subtitle: A brief introduction
         title: About me
         url: blogs/about_me
-      - image: stocks.jpg.
+      - image: stocks.jpg
         subtitle: Yield Curve Inversion as a Predictor of Recessions
         title: Yield Curve 
         url: blogs/yield_curve
