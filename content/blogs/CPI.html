@@ -1,0 +1,143 @@
+---
+title: "Decomposing changes in CPI"
+date: '2021-09-30'
+description: Decomposing the Changes in CPI
+output:
+  html_document:
+    df_print: paged
+image: beverages.jpg
+keywords: ''
+slug: cpi
+categories:
+- ''
+- ''
+draft: no
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<pre class="r"><code>url &lt;- &quot;https://fredaccount.stlouisfed.org/public/datalist/843&quot;
+
+# similar graphs and analyses can be found at 
+
+
+# get tables that exist on the page 
+tables &lt;- url %&gt;% 
+  read_html() %&gt;% 
+  html_nodes(css=&quot;table&quot;)
+
+
+# parse HTML tables into a dataframe called polls 
+# Use purr::map() to create a list of all tables in URL
+polls &lt;- map(tables, . %&gt;% 
+             html_table(fill=TRUE)%&gt;% 
+             janitor::clean_names())
+
+
+# list of cpi
+cpi &lt;- polls[[2]]
+
+cpi_data &lt;- cpi %&gt;% 
+  select(series_id) %&gt;% 
+  pull() %&gt;% 
+  tq_get(get=&quot;economic.data&quot;,from=&quot;2000-01-01&quot;)
+cpi_data &lt;- cpi_data %&gt;%
+  rename(series_id=&quot;symbol&quot;)</code></pre>
+<pre class="r"><code>cpi_data4 &lt;- left_join(cpi_data, cpi,by = &quot;series_id&quot;) </code></pre>
+<pre class="r"><code>#Calculate the yearly changes
+cpi_data4&lt;- cpi_data4 %&gt;%
+  group_by(series_id)%&gt;%
+  mutate(yearly_change=price/lag(price,12)-1)%&gt;%
+  #Omit na values that arise due to lagging
+  na.omit()
+
+cpi_data4&lt;-cpi_data4%&gt;%
+  #Get rid of the common words in the titles
+  mutate(title = str_remove_all(title, &quot;Consumer Price Index for All Urban Consumers: &quot;)) %&gt;%
+  mutate(title = str_remove_all(title, &quot; in U.S. City Average&quot;))%&gt;%
+  #Add a label for coloring in plot
+  mutate(labels=ifelse(yearly_change&gt;=0,1,-1))%&gt;%
+  #Create a new index for All Items to appear first
+  mutate(index=series_id==&quot;CPIAUCSL&quot;)</code></pre>
+<pre class="r"><code>cpi_data4&lt;-cpi_data4%&gt;%
+  group_by(index)%&gt;%
+  arrange(desc(index)) </code></pre>
+<pre class="r"><code>library(ggtext)
+
+plot &lt;-cpi_data4 %&gt;%
+  filter(date&gt;&quot;2016-01-01&quot;)
+
+plot%&gt;%
+  ggplot(aes(x = date))+
+  #Color based on the sign of yearly change
+  geom_point(aes(y=yearly_change),colour=ifelse(plot$yearly_change&gt;0,&#39;tomato3&#39;,&#39;lightskyblue2&#39;))+
+  #Add the trendline
+  geom_smooth(aes(y=yearly_change),se=F,color=&quot;gray52&quot;)+
+  #Ensure that facet_wrap uses factors as levels, instead of the usual alphabetic order
+  facet_wrap(~factor(title,levels=unique(plot$title)),scales=&quot;free&quot;,nr=7)+
+  #Add percent scaling
+  scale_y_continuous(labels=scales::percent)+
+    #Format &amp; Add text
+    labs(
+    title = &quot;**Yearly Change of US CPI (All Items) and its components**  
+    &lt;span style=&#39;font-size:11pt&#39;&gt;YoY change being
+    &lt;span style=&#39;color:#FF0000;&#39;&gt;positive&lt;/span&gt;, or
+    &lt;span style=&#39;color:#ADD8E6;&#39;&gt;negative&lt;/span&gt;&quot;,
+    x = &quot;&quot;, y = &quot;YoY % Change&quot;,subtitle=&quot;Jan 2016 to Aug 2021&quot;,caption=&quot;Data from St Louis Fed FRED \n https://fredaccount.stlouisfed.org/public/datalist/843&quot;
+  ) +
+  theme_bw() +
+  theme(
+    plot.title = element_markdown(lineheight = 1.1),
+    legend.text = element_markdown(size = 11)
+  )</code></pre>
+<p><img src="/blogs/CPI_files/figure-html/unnamed-chunk-5-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#Import the new cpi_data file
+cpi_new &lt;- vroom(here::here(&quot;data&quot;, &quot;cpi_data.csv&quot;)) %&gt;% 
+  janitor::clean_names() 
+
+cpi_new &lt;- cpi_new %&gt;% 
+  group_by(title) %&gt;% 
+  #Calculate yearly changes
+  mutate(yearly_change=value/lag(value,12)-1) %&gt;% 
+  na.omit() %&gt;% 
+  #Get rid of the common words in the titles
+  mutate(title=str_remove_all(title,&quot;Consumer Price Index for All Urban Consumers:&quot;)) %&gt;% 
+  mutate(title=str_remove_all(title,&quot; in U.S. City Average&quot;)) 
+glimpse(cpi_new)</code></pre>
+<pre><code>## Rows: 18,170
+## Columns: 10
+## Groups: title [51]
+## $ component     &lt;chr&gt; &quot;CUSR0000SEFX&quot;, &quot;CUSR0000SEFX&quot;, &quot;CUSR0000SEFX&quot;, &quot;CUSR000~
+## $ date          &lt;date&gt; 1991-01-01, 1991-02-01, 1991-03-01, 1991-04-01, 1991-05~
+## $ value         &lt;dbl&gt; 152, 155, 155, 156, 156, 157, 157, 158, 159, 159, 159, 1~
+## $ title         &lt;chr&gt; &quot; Alcoholic Beverages Away from Home&quot;, &quot; Alcoholic Bever~
+## $ vintage_date  &lt;chr&gt; &quot;Current&quot;, &quot;Current&quot;, &quot;Current&quot;, &quot;Current&quot;, &quot;Current&quot;, &quot;~
+## $ units         &lt;chr&gt; &quot;Index 1982-1984=100&quot;, &quot;Index 1982-1984=100&quot;, &quot;Index 198~
+## $ freq          &lt;chr&gt; &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;~
+## $ seas_adj      &lt;chr&gt; &quot;SA&quot;, &quot;SA&quot;, &quot;SA&quot;, &quot;SA&quot;, &quot;SA&quot;, &quot;SA&quot;, &quot;SA&quot;, &quot;SA&quot;, &quot;SA&quot;, &quot;S~
+## $ updated       &lt;chr&gt; &quot;14-09-21&quot;, &quot;14-09-21&quot;, &quot;14-09-21&quot;, &quot;14-09-21&quot;, &quot;14-09-2~
+## $ yearly_change &lt;dbl&gt; 0.0764, 0.0961, 0.0906, 0.0927, 0.0879, 0.0875, 0.0878, ~</code></pre>
+<pre class="r"><code>plot2&lt;- cpi_new %&gt;% 
+  filter(title %in% c(&quot; Housing&quot;,&quot; Transportation&quot;,&quot; Food and Beverages&quot;,&quot; Medical Care&quot;,&quot; Education and Communication&quot;,&quot; Recreation&quot;,&quot; Apparel&quot;)) %&gt;% 
+  filter(date&gt;&quot;2016-01-01&quot;)
+
+plot2%&gt;% 
+  ggplot(aes(x = date))+
+  geom_point(aes(y=yearly_change),colour=ifelse(plot2$yearly_change&gt;0,&#39;tomato3&#39;,&#39;lightskyblue2&#39;))+
+  geom_smooth(aes(y=yearly_change),se=F,color=&quot;gray52&quot;)+
+  facet_wrap(~title,scales=&quot;free&quot;)+
+  scale_y_continuous(labels=scales::percent)+
+    #Format &amp; Add text
+    labs(
+    title = &quot;**Yearly Change of US CPI (All Items) and its components**  
+    &lt;span style=&#39;font-size:11pt&#39;&gt;YoY change being
+    &lt;span style=&#39;color:#FF0000;&#39;&gt;positive&lt;/span&gt;, or
+    &lt;span style=&#39;color:#ADD8E6;&#39;&gt;negative&lt;/span&gt;&quot;,
+    x = &quot;&quot;, y = &quot;YoY % Change&quot;,subtitle=&quot;Jan 2016 to Aug 2021&quot;,caption=&quot;Data from St Louis Fed FRED \n https://fredaccount.stlouisfed.org/public/datalist/843&quot;
+  ) +
+  theme_bw() +
+  theme(
+    plot.title = element_markdown(lineheight = 1.1),
+    legend.text = element_markdown(size = 11))</code></pre>
+<p><img src="/blogs/CPI_files/figure-html/plot%20subset%20of%20categories-1.png" width="648" style="display: block; margin: auto;" /></p>

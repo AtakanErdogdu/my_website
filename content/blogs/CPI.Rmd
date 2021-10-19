@@ -1,0 +1,204 @@
+---
+title: "Decomposing changes in CPI"
+date: '2021-09-30'
+description: Decomposing the Changes in CPI
+output:
+  html_document:
+    df_print: paged
+image: beverages.jpg
+keywords: ''
+slug: cpi
+categories:
+- ''
+- ''
+draft: no
+---
+
+
+```{r, setup, echo=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, include=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(here)
+library(skimr)
+library(janitor)
+library(httr)
+library(readxl)
+library(vroom)
+library(skimr)
+library(janitor)
+library(vroom)
+library(tidyquant)
+library(rvest)
+```
+
+
+```{r}
+url <- "https://fredaccount.stlouisfed.org/public/datalist/843"
+
+# similar graphs and analyses can be found at 
+
+
+# get tables that exist on the page 
+tables <- url %>% 
+  read_html() %>% 
+  html_nodes(css="table")
+
+
+# parse HTML tables into a dataframe called polls 
+# Use purr::map() to create a list of all tables in URL
+polls <- map(tables, . %>% 
+             html_table(fill=TRUE)%>% 
+             janitor::clean_names())
+
+
+# list of cpi
+cpi <- polls[[2]]
+
+cpi_data <- cpi %>% 
+  select(series_id) %>% 
+  pull() %>% 
+  tq_get(get="economic.data",from="2000-01-01")
+cpi_data <- cpi_data %>%
+  rename(series_id="symbol")
+
+```
+
+```{r}
+cpi_data4 <- left_join(cpi_data, cpi,by = "series_id") 
+
+```
+
+
+```{r}
+#Calculate the yearly changes
+cpi_data4<- cpi_data4 %>%
+  group_by(series_id)%>%
+  mutate(yearly_change=price/lag(price,12)-1)%>%
+  #Omit na values that arise due to lagging
+  na.omit()
+
+cpi_data4<-cpi_data4%>%
+  #Get rid of the common words in the titles
+  mutate(title = str_remove_all(title, "Consumer Price Index for All Urban Consumers: ")) %>%
+  mutate(title = str_remove_all(title, " in U.S. City Average"))%>%
+  #Add a label for coloring in plot
+  mutate(labels=ifelse(yearly_change>=0,1,-1))%>%
+  #Create a new index for All Items to appear first
+  mutate(index=series_id=="CPIAUCSL")
+ 
+```
+
+```{r}
+cpi_data4<-cpi_data4%>%
+  group_by(index)%>%
+  arrange(desc(index)) 
+
+```
+
+```{r, fig.width=20, fig.height=10, fig.fullwidth=TRUE}
+
+library(ggtext)
+
+plot <-cpi_data4 %>%
+  filter(date>"2016-01-01")
+
+plot%>%
+  ggplot(aes(x = date))+
+  #Color based on the sign of yearly change
+  geom_point(aes(y=yearly_change),colour=ifelse(plot$yearly_change>0,'tomato3','lightskyblue2'))+
+  #Add the trendline
+  geom_smooth(aes(y=yearly_change),se=F,color="gray52")+
+  #Ensure that facet_wrap uses factors as levels, instead of the usual alphabetic order
+  facet_wrap(~factor(title,levels=unique(plot$title)),scales="free",nr=7)+
+  #Add percent scaling
+  scale_y_continuous(labels=scales::percent)+
+    #Format & Add text
+    labs(
+    title = "**Yearly Change of US CPI (All Items) and its components**  
+    <span style='font-size:11pt'>YoY change being
+    <span style='color:#FF0000;'>positive</span>, or
+    <span style='color:#ADD8E6;'>negative</span>",
+    x = "", y = "YoY % Change",subtitle="Jan 2016 to Aug 2021",caption="Data from St Louis Fed FRED \n https://fredaccount.stlouisfed.org/public/datalist/843"
+  ) +
+  theme_bw() +
+  theme(
+    plot.title = element_markdown(lineheight = 1.1),
+    legend.text = element_markdown(size = 11)
+  )
+
+
+```
+
+
+```{r, import subset dataset}
+
+
+#Import the new cpi_data file
+cpi_new <- vroom(here::here("data", "cpi_data.csv")) %>% 
+  janitor::clean_names() 
+
+cpi_new <- cpi_new %>% 
+  group_by(title) %>% 
+  #Calculate yearly changes
+  mutate(yearly_change=value/lag(value,12)-1) %>% 
+  na.omit() %>% 
+  #Get rid of the common words in the titles
+  mutate(title=str_remove_all(title,"Consumer Price Index for All Urban Consumers:")) %>% 
+  mutate(title=str_remove_all(title," in U.S. City Average")) 
+glimpse(cpi_new)
+```
+
+
+```{r, plot subset of categories, fig.height=10, fig.fullwidth=TRUE}
+
+plot2<- cpi_new %>% 
+  filter(title %in% c(" Housing"," Transportation"," Food and Beverages"," Medical Care"," Education and Communication"," Recreation"," Apparel")) %>% 
+  filter(date>"2016-01-01")
+
+plot2%>% 
+  ggplot(aes(x = date))+
+  geom_point(aes(y=yearly_change),colour=ifelse(plot2$yearly_change>0,'tomato3','lightskyblue2'))+
+  geom_smooth(aes(y=yearly_change),se=F,color="gray52")+
+  facet_wrap(~title,scales="free")+
+  scale_y_continuous(labels=scales::percent)+
+    #Format & Add text
+    labs(
+    title = "**Yearly Change of US CPI (All Items) and its components**  
+    <span style='font-size:11pt'>YoY change being
+    <span style='color:#FF0000;'>positive</span>, or
+    <span style='color:#ADD8E6;'>negative</span>",
+    x = "", y = "YoY % Change",subtitle="Jan 2016 to Aug 2021",caption="Data from St Louis Fed FRED \n https://fredaccount.stlouisfed.org/public/datalist/843"
+  ) +
+  theme_bw() +
+  theme(
+    plot.title = element_markdown(lineheight = 1.1),
+    legend.text = element_markdown(size = 11))
+  
+
+```
+
+
+
+
+
+
+
