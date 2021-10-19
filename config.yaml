@@ -34,6 +34,7 @@ params:
     heading: Page couldn't be found
     text: Please visit [this page](/)
   favicon: favicon.ico
+  #You run by blogdown::serve_site()
   footer:
     copyright: Company Name
     enable: yes
