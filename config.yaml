@@ -73,7 +73,7 @@ params:
     enable: yes
     showcase:
       - image: portrait.jpeg
-        subtitle: A brief introduction
+        subtitle: Allow me the courtesy to introduce myself
         title: About me
         url: blogs/about_me
       - image: work_background.jpg
@@ -84,14 +84,14 @@ params:
         subtitle: How did the prices evolve over time?
         title: Decomposing the Consumer Price Index
         url: blogs/cpi
+      - image: tflbikes.jpg
+        subtitle: How did COVID19 Affect Bike Rentals in London?
+        title: TfL Bike Rentals
+        url: blogs/bike_rentals
       - image: stocks.jpg
         subtitle: Yield Curve Inversion as a Predictor of Recessions
         title: Yield Curve
         url: blogs/yield_curve
-      - image: pic05.jpg
-        subtitle: Ipsum Dolor Sit Amet
-        title: Consequat
-        url: blogs/ipsum
       - image: pic06.jpg
         subtitle: Feugiat Amet Tempus
         title: Etiam
