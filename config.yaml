@@ -1,22 +1,21 @@
 baseURL: https://atakan-erdogdu.netlify.app/
 languageCode: en-us
-title: Portfolio Website for Atakan
+title: Portfolio Website for Atakan Erdogdu
 theme: forty
 googleAnalytics: ''
 disqusShortname: ''
 params:
   banner:
-    buttonText: Get Started
+    buttonText: Start Exploring
     subtitle: |-
-      A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP
-      AND RELEASED UNDER THE CREATIVE COMMONS.
+      GET TO KNOW ME AND THE PROJECTS I WORKED ON
     title: Hi, my name is Atakan
     blog: {}
     contact:
     address:
-      - city: City, ST 00000
-        country: Country
-        street: Street
+      - city: London, NW1
+        country: United Kingdom
+        street: Regent's Park
         title: Address
     buttonClear: Clear
     buttonSend: Send message
@@ -25,7 +24,7 @@ params:
         title: Email
     enable: yes
     phone:
-      - phone: (000) 000-0000 x1234
+      - phone: (+44) 7391960555
         title: Phone
   custom_css: []
   custom_js: []
@@ -34,56 +33,40 @@ params:
     heading: Page couldn't be found
     text: Please visit [this page](/)
   favicon: favicon.ico
-  #You run by blogdown::serve_site()
   footer:
-    copyright: Company Name
+    copyright: Atakan Erdogdu
     enable: yes
     quicklinks:
-      - alt: HTML5 UP
-        text: 'Design: '
-        url: https://www.html5up.net
         social:
-      - icon: fa-twitter
-        label: Twitter
-        url: https://www.twitter.com
       - icon: fa-facebook
         label: Facebook
-        url: https://www.facebook.com
+        url: https://www.facebook.com/atakan.erdogdu
       - icon: fa-instagram
         label: Instagram
-        url: https://www.instagram.com
+        url: https://www.instagram.com/atakannerdogdu/
       - icon: fa-github
         label: GitHub
-        url: https://www.github.com
+        url: https://github.com/AtakanErdogdu
       - icon: fa-linkedin
         label: LinkedIn
-        url: https://www.linkedin.com
+        url: https://www.linkedin.com/in/atakan-erdogdu/
   image: ''
-  name: Your name
+  name: Atakan Erdogdu
   navigation:
     button1:
       - name: Get Started
         url: blogs
-    button2:
-      - name: Log In
-        url: '#'
     links:
       - name: Home
         url: '#'
-      - name: Blogs
-        url: blogs
-      - name: Generic Blog
-        url: blogs/ipsum
-      - name: Elements
-        url: elements.html
     menu: Menu
-    subtitle: By HTML5 Up
-    title: Forty
+    subtitle: MFA2022
+    title: Atakan Erdogdu
   tiles:
     enable: yes
     showcase:
-      - image: pic01.jpg
-        subtitle: Ipsum Dolor Sit Amet
+      - image: stocks.jpg
+        subtitle: Yield Curve Inversion and 3m-10y Spread As Predictors of Recessions
         title: Yield Curve
         url: blogs/yield_curve
       - image: pic02.jpg
