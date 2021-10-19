@@ -84,8 +84,8 @@ params:
     showcase:
       - image: pic01.jpg
         subtitle: Ipsum Dolor Sit Amet
-        title: Aliquam
-        url: blogs/aliquam
+        title: Yield Curve
+        url: blogs/yield_curve
       - image: pic02.jpg
         subtitle: Feugiat Amet Tempus
         title: Tempus
