@@ -93,9 +93,9 @@ params:
         title: Predictive Power of the Yield Curve
         url: blogs/yield_curve
       - image: pic06.jpg
-        subtitle: Feugiat Amet Tempus
-        title: Etiam
-        url: blogs/ipsum
+        subtitle: A Supervised Machine Learning Model in Python
+        title: Predicting Direction of Stock Price Returns
+        url: blogs/predicting_direction_of_rets
   two:
     buttonText: Get Started
     enable: yes
