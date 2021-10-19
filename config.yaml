@@ -62,7 +62,7 @@ params:
   navigation:
     button1:
       - name: Get Started
-        url: blogs
+        url: '#'
     links:
       - name: Home
         url: '#'
