@@ -76,13 +76,13 @@ params:
         subtitle: A brief introduction
         title: About me
         url: blogs/about_me
+      - image: work_background.jpg
+        subtitle: Education and professional experiences
+        title: Cirriculum Vitae
+        url: blogs/yield_curve
       - image: stocks.jpg
         subtitle: Yield Curve Inversion as a Predictor of Recessions
-        title: Yield Curve 
-        url: blogs/yield_curve
-      - image: pic03.jpg
-        subtitle: Lorem Etiam Nullam
-        title: Magna
+        title: Yield Curve
         url: blogs/magna
       - image: pic04.jpg
         subtitle: Nisl Sed Aliquam

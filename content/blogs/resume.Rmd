@@ -1,0 +1,22 @@
+---
+categories:  
+- ""    
+- ""
+date: "2021-09-30"
+description: Education and background page
+draft: false
+image: work_background.jpg # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
+
+keywords: ""
+slug: resume # slug is the shorthand URL address... no spaces plz
+title: My Cirriculum Vitae
+---
+
+
+## My Cirriculum Vitae
+
+```{r picture1, echo=FALSE, out.width="100%"}
+knitr::include_graphics("/img/resume.jpeg", error = FALSE)
+```
+
+
