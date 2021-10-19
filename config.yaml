@@ -90,7 +90,7 @@ params:
         url: blogs/bike_rentals
       - image: stocks.jpg
         subtitle: Yield Curve Inversion as a Predictor of Recessions
-        title: Yield Curve
+        title: Predictive Power of the Yield Curve
         url: blogs/yield_curve
       - image: pic06.jpg
         subtitle: Feugiat Amet Tempus
