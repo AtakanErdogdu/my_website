@@ -12,6 +12,22 @@ slug: yield_curve # slug is the shorthand URL address... no spaces plz
 title: Yield Curve Inversion and 3m-10y Spread As a Predictor of Recessions
 ---
 
+```{r, setup, echo=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
 ##Introduction
 
 My name is Atakan Erdogdu. I was born and raised in **Turkey**. I am an inquisitive individual who does not hesitate to ask why certain things evolve as they do. I remember wondering myself why do the numbers on the right-hand corner of the TV-screen changed on a daily basis, especially after someone important gave a speech or a major political event. I inquired my parents, consulted my classmates, and brought my questions to the classroom. Yet, I could not receive a satisfactory answer. Hence, I decided to find the answers myself and studied Finance at International Business School, where I earned a 4.0 GPA, and am currently studying at **London Business School**. 
