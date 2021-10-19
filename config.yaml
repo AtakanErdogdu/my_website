@@ -92,10 +92,10 @@ params:
         subtitle: Yield Curve Inversion as a Predictor of Recessions
         title: Predictive Power of the Yield Curve
         url: blogs/yield_curve
-      - image: pic06.jpg
+      - image: pytest.jpg
         subtitle: A Supervised Machine Learning Model in Python
         title: Predicting Direction of Stock Price Returns
-        url: blogs/predicting_direction_of_rets
+        url: blogs/pytest
   two:
     buttonText: Get Started
     enable: yes
