@@ -15,8 +15,8 @@ title: My Cirriculum Vitae
 
 ## My Cirriculum Vitae
 
-```{r picture1, echo=FALSE, out.width="100%"}
-knitr::include_graphics("/img/resume.jpeg", error = FALSE)
+```{r picture1, echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("/img/resume.jpg", error = FALSE)
 ```
 
 
