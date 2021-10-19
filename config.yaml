@@ -8,7 +8,7 @@ params:
   banner:
     buttonText: Start Exploring
     subtitle: |-
-      GET TO KNOW ME AND THE PROJECTS I WORKED ON
+      FEEL FREE TO EXPLORE MY WEBSITE TO GET TO KNOW ME AND THE PROJECTS I WORKED ON
     title: Hi, my name is Atakan!
     blog: {}
     contact:
@@ -97,13 +97,8 @@ params:
         title: Predicting Direction of Stock Price Returns
         url: blogs/pytest
   two:
-    buttonText: Get Started
+    buttonText: Download My Paper
     enable: yes
-    subtitle: "Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero.
-      \r\n    Mauris aliquet magna magna sed nunc rhoncus pharetra. \r\n    Pellentesque
-      condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia
-      pellentesque lorem ipsum dolor. \r\n    Nullam et orci eu lorem consequat tincidunt.
-      Vivamus et sagittis libero.\r\n    Mauris aliquet magna magna sed nunc rhoncus
-      amet pharetra et feugiat tempus."
-    title: Massa libero
-    url: blogs
+    subtitle: I recently valued Intel using different valuation methodologies that range from DCF, comparables, Black-Scholes liquidation value, and Monte Carlo simulation.
+    title: My valuation analysis of Intel
+    url: https://docs.google.com/document/d/14zX90v0-kliF0HxEhHPUtQ3gZHp6zLvq/edit?usp=sharing&ouid=104470515209883936122&rtpof=true&sd=true
