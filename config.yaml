@@ -99,6 +99,6 @@ params:
   two:
     buttonText: Download My Paper
     enable: yes
-    subtitle: I recently valued Intel using different valuation methodologies that range from DCF, comparables, Black-Scholes liquidation value, and Monte Carlo simulation.
+    subtitle: I recently valued Intel using different valuation methodologies that range from DCF, comparables, Black-Scholes liquidation value, and Monte Carlo simulation.If you are interested, check it out!
     title: My valuation analysis of Intel
     url: https://drive.google.com/file/d/1PxiA16DKEAM3e0e3rK_t8FOH9nWFIIku/view?usp=sharing
