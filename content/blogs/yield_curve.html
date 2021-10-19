@@ -1,0 +1,133 @@
+---
+categories:  
+- ""    #the front matter should be like the one found in, e.g., blog2.md. It cannot be like the normal Rmd we used
+- ""
+date: "2021-09-30"
+description: Risk-Return of DJIA stocks # the title that will show up once someone gets to this page
+draft: false
+image: spices.jpg # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
+
+keywords: ""
+slug: yield_curve # slug is the shorthand URL address... no spaces plz
+title: Yield Curve Inversion and 3m-10y Spread As a Predictor of Recessions
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<pre class="r"><code>yield_curve &lt;- read_csv(here::here(&quot;data&quot;, &quot;yield_curve.csv&quot;))</code></pre>
+<pre class="r"><code>yield_curve %&gt;% 
+  ggplot(aes(x=date)) +
+  geom_line(aes(y=value,color=duration)) +
+  facet_wrap(~duration,scales=&quot;free&quot;,nr=5)+
+  theme_bw()+
+  theme(legend.position=&quot;none&quot;)+
+  labs(title=&quot;Yields on U.S Treasury rates since 1960&quot;,x=&quot;&quot;,y=&quot;%&quot;,caption=&quot;Source: St. Louis Federal Reserve Economic Database (FRED)&quot;)</code></pre>
+<p><img src="/blogs/yield_curve_files/figure-html/yield%20curve-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<p><img src="C:/Users/ataka/OneDrive/Belgeler/Lecture1/my_website/images/yield_curve2.png" width="100%" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>yield_curve_dates &lt;- yield_curve %&gt;% 
+  mutate (year = year(date),
+          month = lubridate::month(date, label = TRUE),
+          week = isoweek(date)) %&gt;% 
+  filter(year &gt;1998) 
+  
+
+yield_curve_dates %&gt;%
+  #Force ggplot to use levels as factor
+  ggplot(aes(x=factor(maturity,levels=unique(yield_curve_dates$maturity)),
+             y=value,
+             #Group by month to make R understand that we are connecting values of each duration by month
+             group=month,color=as.factor(year)))+
+  #Add the geometric line
+  geom_line()+
+  facet_wrap(~year,nr=6)+
+  theme_bw()+
+  labs(title=&quot;US Yield Curve&quot;,
+       x=&quot;Maturity&quot;,y=&quot;Yield(%)&quot;,caption=&quot;Source: St. Louis Federal Reserve Economic Database (FRED)&quot;)+
+  theme(legend.position=&quot;none&quot;)</code></pre>
+<p><img src="/blogs/yield_curve_files/figure-html/yield%20curve%20second%20graph-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>yield_curve_3_10 &lt;- yield_curve_dates %&gt;% 
+  filter(maturity %in% c(&quot;3m&quot;,&quot;10y&quot;)) 
+
+yield_curve_3_10 %&gt;% 
+  #Color based on factor, rather than alphabetically
+  ggplot(aes(x=date,y=value,color=factor(duration,levels=unique(yield_curve_3_10$duration))))+
+  #Add the lines
+  geom_line()+
+  #Theme and labels
+  theme_bw()+
+    labs(title=&quot;Yields on 3-month and 10-year US Treasury rates since 1999&quot;,
+       x=&quot;&quot;,y=&quot;%&quot;,caption=&quot;Source: St. Louis Federal Reserve Economic Database (FRED)&quot;)+
+  theme(legend.title=element_blank())</code></pre>
+<p><img src="/blogs/yield_curve_files/figure-html/yield_curve%203rd%20graph-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># get US recession dates after 1946 from Wikipedia 
+# https://en.wikipedia.org/wiki/List_of_recessions_in_the_United_States
+
+recessions &lt;- tibble(
+  from = c(&quot;1948-11-01&quot;, &quot;1953-07-01&quot;, &quot;1957-08-01&quot;, &quot;1960-04-01&quot;, &quot;1969-12-01&quot;, &quot;1973-11-01&quot;, &quot;1980-01-01&quot;,&quot;1981-07-01&quot;, &quot;1990-07-01&quot;, &quot;2001-03-01&quot;, &quot;2007-12-01&quot;,&quot;2020-02-01&quot;),  
+  to = c(&quot;1949-10-01&quot;, &quot;1954-05-01&quot;, &quot;1958-04-01&quot;, &quot;1961-02-01&quot;, &quot;1970-11-01&quot;, &quot;1975-03-01&quot;, &quot;1980-07-01&quot;, &quot;1982-11-01&quot;, &quot;1991-03-01&quot;, &quot;2001-11-01&quot;, &quot;2009-06-01&quot;, &quot;2020-04-30&quot;) 
+  )  %&gt;% 
+  mutate(From = ymd(from), 
+         To=ymd(to),
+         duration_days = To-From)
+
+
+glimpse(recessions)</code></pre>
+<pre><code>## Rows: 12
+## Columns: 5
+## $ from          &lt;chr&gt; &quot;1948-11-01&quot;, &quot;1953-07-01&quot;, &quot;1957-08-01&quot;, &quot;1960-04-01&quot;, ~
+## $ to            &lt;chr&gt; &quot;1949-10-01&quot;, &quot;1954-05-01&quot;, &quot;1958-04-01&quot;, &quot;1961-02-01&quot;, ~
+## $ From          &lt;date&gt; 1948-11-01, 1953-07-01, 1957-08-01, 1960-04-01, 1969-12~
+## $ To            &lt;date&gt; 1949-10-01, 1954-05-01, 1958-04-01, 1961-02-01, 1970-11~
+## $ duration_days &lt;drtn&gt; 334 days, 304 days, 243 days, 306 days, 335 days, 485 d~</code></pre>
+<pre class="r"><code>library(scales)
+library(ggtext)
+
+yield_curve_3&lt;- yield_curve %&gt;% 
+  #Get the 3months data
+  filter(maturity %in% c(&quot;3m&quot;)) %&gt;% 
+  #Convert the dataframe to wider form
+  pivot_wider(names_from=&quot;maturity&quot;,values_from=&quot;value&quot;) %&gt;% 
+  rename(three_month=&quot;3m&quot;)
+
+yield_curve_10 &lt;- yield_curve %&gt;% 
+  #Get the 10y data
+  filter(maturity %in% c(&quot;10y&quot;)) %&gt;% 
+  #Convert the dataframe to wider form
+  pivot_wider(names_from=&quot;maturity&quot;,values_from=&quot;value&quot;) %&gt;% 
+  rename(ten_year=&quot;10y&quot;)
+
+#Merge the two datasets and calculate the spread
+tidy_yield &lt;- yield_curve_10_3 &lt;- left_join(yield_curve_3,yield_curve_10,by=&quot;date&quot;) %&gt;% 
+  mutate(spread=ten_year-three_month) 
+
+  
+tidy_yield %&gt;% 
+  #Plot dates
+  ggplot(aes(x=date)) +
+  #Plot the recession lines
+  geom_rect(data=recessions,aes(xmin=From,xmax=To,ymin=-Inf,ymax=Inf),fill=&#39;darkgray&#39;,inherit.aes=FALSE,alpha=0.35)+
+  #Ensure that x axis is showing years in the increments of 2
+  scale_x_date(date_breaks=&quot;2 years&quot;,labels=date_format(&quot;%Y&quot;),limits=as.Date(c(&#39;1959-01-01&#39;,&#39;2021-08-01&#39;)))+
+  #Add the spread
+  geom_line(aes(y=spread),size=0.3)+
+  #Color based on whether spread is positive or negative
+  geom_ribbon(aes(ymin=0,ymax=pmax(spread,0)),fill=&quot;dodgerblue3&quot;,alpha=0.3)+
+  geom_ribbon(aes(ymin=pmin(0,spread),ymax=0),fill=&quot;red&quot;,alpha=0.3)+
+  #Add the rugs and color based on the sign of spread
+  geom_rug(data=subset(tidy_yield,spread&gt;0),color=&quot;dodgerblue3&quot;,sides=&quot;b&quot;,alpha=0.3)+
+  geom_rug(data=subset(tidy_yield,spread&lt;=0),color=&quot;red&quot;,sides=&quot;b&quot;,alpha=0.3)+
+  geom_hline(yintercept=0,color=&quot;black&quot;)+
+  #Theme and title
+  theme_bw()+
+   labs(
+    #Use ** for bold
+    title = &quot;**Yield Curve Inversion: 10-year minus 3-month U.S Treasury rates**&quot;,
+    #* for italics and &lt;br&gt; to force writing in new line
+    subtitle = &quot;*Difference in % points, monthly averages &lt;br&gt; Shaded areas correspond to recessions*&quot;,
+    x = &quot;&quot;, y = &quot;Difference (10 year-3 month) yield in %&quot;,caption=&quot;Source: St. Louis Federal Reserve Economic Database (FRED)&quot;)+
+   theme(
+    plot.title = element_markdown(lineheight = 1.1),
+    plot.subtitle=element_markdown(lineheight=1.1),
+    legend.text = element_markdown(size = 11))</code></pre>
+<p><img src="/blogs/yield_curve_files/figure-html/yield%20curve%20last%20graph-1.png" width="1920" style="display: block; margin: auto;" /></p>
